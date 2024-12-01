@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../styles/profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeQrIETAp-sd6nAXRCOoN0pAqI9f976d0",
+            authDomain: "test-5999a.firebaseapp.com",
+            projectId: "test-5999a",
+            storageBucket: "test-5999a.appspot.com",
+            messagingSenderId: "387249493917",
+            appId: "1:387249493917:web:96b9441d0bb50c3a2a0174"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <div class="container">
+     <nav class="sidebar">
+            <ul>
+                <li>
+                    <a href="./home.html" class="active">
+                        <span class="material-icons icon">home</span> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="./profile.html">
+                        <span class="material-icons icon">person</span> Profile
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <h1>Profile</h1>
+            <section>
+                <h2>Personal Information</h2>
+                <form id="profileForm">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" placeholder="First Name">
+
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="Last Name">
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email" readonly>
+
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" placeholder="Phone">
+                </form>
+            </section>
+            <section>
+                <h2>Preferences</h2>
+                <label for="city">City</label>
+                <select id="city">
+                    <option value="Riyadh">Riyadh</option>
+                    <option value="Jeddah">Jeddah</option>
+                    <option value="Aseer">Aseer</option>
+                </select>
+                <label for="companion">Companion</label>
+                <select id="companion">
+                    <option value="Friends">Friends</option>
+                    <option value="Family">Family</option>
+                    <option value="Alone">Alone</option>
+                </select>
+                <label for="budget">Budget</label>
+                <select id="budget">
+                    <option value="Luxury">Luxury</option>
+                    <option value="Mid-range">Mid-range</option>
+                    <option value="Economy">Economy</option>
+                </select>
+            </section>
+            <div class="buttons">
+                <button class="save-button" onclick="saveProfile()">Save Changes</button>
+                <button class="settings-button" onclick="goToSettings()">Go to Settings</button>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            console.log("User Data from Local Storage:", userData); // Debugging log
+
+            if (userData) {
+                // Populate separate fields for firstName and lastName
+                document.getElementById('firstName').value = userData.firstName || '';
+                document.getElementById('lastName').value = userData.lastName || '';
+
+                // Populate other fields
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('city').value = userData.city || '';
+                document.getElementById('companion').value = userData.companion || '';
+                document.getElementById('budget').value = userData.budget || '';
+            } else {
+                alert("User data not found.");
+            }
+        });
+
+        async function saveProfile() {
+            const user = auth.currentUser;
+            if (user) {
+                const updatedData = {
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    city: document.getElementById('city').value,
+                    companion: document.getElementById('companion').value,
+                    budget: document.getElementById('budget').value
+                };
+
+                try {
+                    await db.collection('users').doc(user.uid).update(updatedData);
+                    alert("Profile updated successfully!");
+                } catch (error) {
+                    console.error("Error updating profile:", error.message);
+                    alert("Failed to update profile. Please try again.");
+                }
+            } else {
+                alert("No user is logged in!");
+            }
+        }
+
+        function goToSettings() {
+            // Redirect to the settings page
+            window.location.href = "./settings.html";
+        }
+    </script>
+</body>
+</html>

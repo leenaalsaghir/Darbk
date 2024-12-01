@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../styles/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeQrIETAp-sd6nAXRCOoN0pAqI9f976d0",
+            authDomain: "test-5999a.firebaseapp.com",
+            projectId: "test-5999a",
+            storageBucket: "test-5999a.appspot.com",
+            messagingSenderId: "387249493917",
+            appId: "1:387249493917:web:96b9441d0bb50c3a2a0174"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="window.history.back()">&#8592;</button>
+        <h1>Login</h1>
+        <form id="loginForm">
+           <!--<label for="email">Email</label> --> 
+            <input type="email" id="email" placeholder="Email" required>
+
+            <!--<label for="password">Password</label>-->
+            <input type="password" id="password" placeholder="Password" required>
+
+            <button type="submit" class="login-button">Login</button>
+            <button id="forgotPasswordButton" class="forgot-password-button">Forgot Password?</button>
+
+        </form>
+    </div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Fetch user data from Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+
+                if (userDoc.exists) {
+                    localStorage.setItem('userData', JSON.stringify(userDoc.data()));
+                    window.location.href = "./home.html"; // Redirect to the home page
+                } else {
+                    alert("User data not found in the database.");
+                }
+            } catch (error) {
+                console.error("Error logging in:", error.message);
+                alert(error.message);
+            }
+        });
+
+        document.getElementById("forgotPasswordButton").addEventListener("click", async () => {
+            const email = prompt("Please enter your email to reset your password:");
+            if (email) {
+                try {
+                    await auth.sendPasswordResetEmail(email);
+                    alert("Password reset email sent! Please check your inbox.");
+                } catch (error) {
+                    console.error("Error sending password reset email:", error.message);
+                    alert(error.message);
+                }
+            } else {
+                alert("Email field cannot be empty.");
+            }
+        });
+    </script>
+</body>
+</html>

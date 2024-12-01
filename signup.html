@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../styles/signup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Firebase Compatibility Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeQrIETAp-sd6nAXRCOoN0pAqI9f976d0",
+            authDomain: "test-5999a.firebaseapp.com",
+            databaseURL: "https://test-5999a-default-rtdb.firebaseio.com",
+            projectId: "test-5999a",
+            storageBucket: "test-5999a.firebasestorage.app",
+            messagingSenderId: "387249493917",
+            appId: "1:387249493917:web:96b9441d0bb50c3a2a0174"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="header">
+            <button class="back-button" onclick="window.history.back()">&#8592;</button>
+            <h1>Sign Up</h1>
+        </div>
+        <h2>Create Your Account</h2>
+        <form id="signupForm">
+            <input type="text" id="firstName" placeholder="First Name" required>
+            <input type="text" id="lastName" placeholder="Last Name" required>
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit" class="next-button">Next</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Collect input values
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+            // Validate passwords
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                // Create user with email and password
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Save user data to Firestore
+                await db.collection("users").doc(user.uid).set({
+                    uid: user.uid,
+                    firstName: firstName,
+                    lastName: lastName,
+                    phone: phoneNumber,
+                    email: email
+                });
+
+                alert("Account created successfully!");
+                // Redirect to the general_preferences page
+                window.location.href = "./general_preferences.html";
+            } catch (error) {
+                console.error("Error signing up:", error.message);
+                alert(error.message);
+            }
+        });
+    </script>
+</body>
+</html>
