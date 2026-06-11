@@ -6,13 +6,13 @@ import 'package:darbk2/pages/splash_screen.dart';
 void main() async {
   
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: FirebaseOptions( apiKey: "AIzaSyCeQrIETAp-sd6nAXRCOoN0pAqI9f976d0",
+  await Firebase.initializeApp(options: FirebaseOptions( apiKey: "#####",
   authDomain: "test-5999a.firebaseapp.com",
   databaseURL: "https://test-5999a-default-rtdb.firebaseio.com",
   projectId: "test-5999a",
   storageBucket: "test-5999a.firebasestorage.app",
-  messagingSenderId: "387249493917",
-  appId: "1:387249493917:web:6940e1af9701327b2a0174")); 
+  messagingSenderId: "####",
+  appId: "###")); 
   runApp(const DarbkApp());
 }
 
