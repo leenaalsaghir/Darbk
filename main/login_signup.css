@@ -1,0 +1,73 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #E6D9F4; /* Matching the background color in the screenshot */
+    font-family: "Lexend Deca", sans-serif;
+}
+
+.container {
+    text-align: center;
+}
+
+.hero {
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    max-width: 300px;
+    height: auto;
+}
+
+.welcome-text h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #6D48A8;
+    margin: 10px 0;
+}
+
+.welcome-text p {
+    color: #6D48A8;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+     border-radius: 20px;
+}
+
+.signup {
+    background-color: #6D48A8;
+    color: white;
+}
+
+.signup:hover {
+    background-color: #3d216b;
+}
+
+.login {
+    background-color: #6D48A8;
+    color: white;
+}
+
+.login:hover {
+    background-color: #3d216b; 
+}
